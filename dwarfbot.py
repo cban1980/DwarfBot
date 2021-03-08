@@ -9,5 +9,8 @@ TOKENHOME = "%s/.DwarfSettings/" % (HOMEDIR)
 with open(TOKENHOME + "token.txt", "r") as readfile:
     TOKEN = readfile.read().strip()
 
+async def acommand(ctx, argument):
+   await bot.say("Stuff")
+
 bot = commands.Bot(command_prefix='!')
 bot.run(TOKEN)
