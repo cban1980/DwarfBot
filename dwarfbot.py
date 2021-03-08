@@ -21,8 +21,9 @@ async def husman(ctx):
     htmldata = requests.get('https://restauranghusman.se/')
     soup = bs(htmldata.text, 'html5lib')
     mat = soup.find("div", class_ = "todays-menu")
-    mat = mat.get_text().strip()
-    await ctx.channel.send(mat)
+    for ul in mat:
+        for li in ul.findAll('li'):
+            await ctx.channel.send(li.getText())
 
 
 @bot.command(name='streams', pass_context=True)
