@@ -14,14 +14,20 @@ TOKENHOME = "%s/.DwarfSettings/" % (HOMEDIR)
 with open(TOKENHOME + "token.txt", "r") as readfile:
     TOKEN = readfile.read().strip()
 
-bot = discord.ext.commands.Bot(command_prefix = "your_prefix");
+bot = discord.ext.commands.Bot(command_prefix = "!");
 
-@bot.command()
-async def ping(ctx):
-    '''Pong! Get the bot's response time'''
-    em = discord.Embed(color=discord.Color.green())
-    em.title = "Pong!"
-    em.description = f'{bot.latency * 1000} ms'
-    await ctx.send(embed=em)
+@bot.command(name='streams', pass_context=True)
+async def streams(ctx):
+    htmldata = requests.get('https://www.returnofreckoning.com/')
+    soup = bs(htmldata.text, 'html5lib')
+    outstuff = []
+    for link in soup.findAll(class_="topictitle"):
+        outstuffers = link.getText().rstrip()
+        outstuff.append(" ⟿  "  + "[" + str(outstuffers) + "]" + "(" + link.get('href') + ")" + "£")
+    outstuff = ''.join(outstuff)
+    outstuff = outstuff.replace("£", "\n")
+    embed=discord.Embed(title=" ")
+    embed.add_field(name="Currently running ROR Streams:", value=str(outstuff), inline=False)
+    await ctx.channel.send(embed=embed) 
 
 bot.run(TOKEN)
