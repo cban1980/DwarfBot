@@ -6,6 +6,7 @@ import os
 import requests
 from bs4 import BeautifulSoup as bs
 import re
+import yfinance as yf
 
 # External settings from dot dir
 # Yes Mr Polnäs, you need an external token directory
@@ -28,6 +29,12 @@ async def husman(ctx):
             husmat += li
     values = "\n".join(map(str, husmat))
     await ctx.channel.send('**Dagens meny hos Husman:**\n' + values)
+
+@bot.command(name='gme', pass_context=True)
+async def gme(ctx):
+    tickerSymbol = 'GME'
+    tickerData = yf.Ticker(tickerSymbol)
+    await ctx.channel.send(tickerData.recommendations)
 
 @bot.command(name='chili', pass_context=True)
 async def chili(ctx):
@@ -55,7 +62,7 @@ async def hjalp(ctx):
     embed = discord.Embed(title="𝐃𝐢𝐬𝐜𝐨𝐫𝐝𝐛𝐨𝐭𝐞𝐧 DwarBot", description="Kommandolista:", color=0xeee657)
     embed.add_field(name="!husman", value="Visar dagens meny från husman.", inline=False)
     embed.add_field(name="!chili", value="Visar dagens meny från Chili&Lime.", inline=False)
-    embed.set_thumbnail(url="https://thumbs.dreamstime.com/b/liver-detox-diet-food-concept-fruits-vegetables-nuts-olive-oil-garlic-cleansing-body-healthy-eating-top-view-flat-lay-liver-166983115.jpg")
+    embed.set_thumbnail(url="https://hekint.org/images/All_journal_images/2015_Briefs/Goyri/Goyri_Figure%205.jpg")
     await ctx.channel.send(embed=embed)
 
 bot.run(TOKEN)
