@@ -54,6 +54,7 @@ async def chili(ctx):
 async def hjalp(ctx):
     embed = discord.Embed(title="𝐃𝐢𝐬𝐜𝐨𝐫𝐝𝐛𝐨𝐭𝐞𝐧 DwarBot", description="Kommandolista:", color=0xeee657)
     embed.add_field(name="!husman", value="Visar dagens meny från husman.", inline=False)
+    embed.add_field(name="!chili", value="Visar dagens meny från Chili&Lime.", inline=False)
     embed.set_thumbnail(url="https://thumbs.dreamstime.com/b/liver-detox-diet-food-concept-fruits-vegetables-nuts-olive-oil-garlic-cleansing-body-healthy-eating-top-view-flat-lay-liver-166983115.jpg")
     await ctx.channel.send(embed=embed)
 
