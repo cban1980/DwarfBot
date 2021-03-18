@@ -34,7 +34,7 @@ async def husman(ctx):
 async def gme(ctx):
     tickerSymbol = 'GME'
     tickerData = yf.Ticker(tickerSymbol)
-    await ctx.channel.send(tickerData.recommendations)
+    await ctx.channel.send(tickerData.major_holders)
 
 @bot.command(name='chili', pass_context=True)
 async def chili(ctx):
@@ -59,10 +59,10 @@ async def chili(ctx):
 
 @bot.command(name='hjalp', pass_context=True)
 async def hjalp(ctx):
-    embed = discord.Embed(title="𝐃𝐢𝐬𝐜𝐨𝐫𝐝𝐛𝐨𝐭𝐞𝐧 DwarBot", description="Kommandolista:", color=0xeee657)
+    embed = discord.Embed(title="𝐃𝐢𝐬𝐜𝐨𝐫𝐝𝐛𝐨𝐭𝐞𝐧 Monke", description="Kommandolista:", color=0xeee657)
     embed.add_field(name="!husman", value="Visar dagens meny från husman.", inline=False)
     embed.add_field(name="!chili", value="Visar dagens meny från Chili&Lime.", inline=False)
-    embed.set_thumbnail(url="https://hekint.org/images/All_journal_images/2015_Briefs/Goyri/Goyri_Figure%205.jpg")
+    embed.set_thumbnail(url="https://media.npr.org/assets/img/2014/08/07/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s800-c85.jpg")
     await ctx.channel.send(embed=embed)
 
 bot.run(TOKEN)
