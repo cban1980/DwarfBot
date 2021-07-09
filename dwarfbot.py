@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
@@ -7,7 +7,8 @@ import requests
 from bs4 import BeautifulSoup as bs
 import re
 import yfinance as yf
-
+import io
+import aiohttp
 # External settings from dot dir
 # Yes Mr Polnäs, you need an external token directory
 HOMEDIR = os.path.expanduser('~')
@@ -17,6 +18,15 @@ with open(TOKENHOME + "token.txt", "r") as readfile:
     TOKEN = readfile.read().strip()
 
 bot = discord.ext.commands.Bot(command_prefix = "!");
+
+@bot.event
+async def on_ready():
+   print('Inloggad som: ' + bot.user.name)
+   url_data = requests.get('http://www.fortunecookiemessage.com/').text
+   soup = bs(url_data, 'html.parser')
+   cookie = soup.find(class_="cookie-link").getText()
+   activity = discord.Game(name=cookie)
+   await bot.change_presence(activity=activity)
 
 @bot.command(name='husman', pass_context=True)
 async def husman(ctx):
@@ -30,11 +40,9 @@ async def husman(ctx):
     values = "\n".join(map(str, husmat))
     await ctx.channel.send('**Dagens meny hos Husman:**\n' + values)
 
-@bot.command(name='gme', pass_context=True)
-async def gme(ctx):
-    tickerSymbol = 'GME'
-    tickerData = yf.Ticker(tickerSymbol)
-    await ctx.channel.send(tickerData.major_holders)
+@bot.command(name='aktie', pass_context=True)
+async def aktie(ctx, arg):
+    await ctx.channel.send(file=discord.File(result, 'aktie.png'))
 
 @bot.command(name='chili', pass_context=True)
 async def chili(ctx):
@@ -56,6 +64,20 @@ async def chili(ctx):
     snasket = "".join(map(str, maten))
     snasket = re.sub("\n\s*\n*", "\n", snasket).lstrip()
     await ctx.channel.send('**Dagens meny hos Chili&Lime:**\n' + snasket)
+
+def remove_last_line_from_string(s):
+    return s[:s.rfind('\n')]
+
+@bot.command(name='väder', pass_context=True)
+async def väder(ctx, arg):
+    arg = arg.capitalize()
+    url = "https://wttr.in/{0}.png?0pq&lang=sv".format(arg)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status != 200:
+                return await channel.send('Kunde ej hämta bild...')
+            data = io.BytesIO(await resp.read())
+        await ctx.channel.send(file=discord.File(data, 'väder.png'))
 
 @bot.command(name='hjalp', pass_context=True)
 async def hjalp(ctx):
