@@ -9,6 +9,7 @@ import re
 import io
 import aiohttp
 import random
+import datetime
 
 HOMEDIR = os.path.expanduser('~')
 TOKENHOME = "%s/tokens/" % (HOMEDIR)
@@ -33,11 +34,27 @@ def htmlformat(input):
 def bold(input):
     return "**" + input + "**"
 
+@bot.event
+async def on_message(message: discord.Message):
+    time_now  = datetime.datetime.now().strftime('%m-%d-%Y-%H-%M-%S') 
+    image_types = ["png", "jpeg", "gif", "jpg", "webp"]
+    for attachment in message.attachments:
+        if any(attachment.filename.lower().endswith(image) for image in image_types):
+            if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author)):
+                await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
+            else:
+                 os.makedirs('{0}/images/{1}'.format(HOMEDIR, message.author))
+                 await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
+
+            
 @bot.command(name='pornhub', pass_context=True)
 async def pornhub(ctx):
-    lines = open('{0}/discordbots/files/porn.txt'.format(HOMEDIR)).read().splitlines()
-    randline = random.choice(lines)
-    await ctx.channel.send("{0} {1}".format(ctx.message.author.mention, randline))
+    if ctx.message.channel.id != 700643276415565845:
+        pass
+    else:
+        lines = open('{0}/discordbots/files/porn.txt'.format(HOMEDIR)).read().splitlines()
+        randline = random.choice(lines)
+        await ctx.channel.send("{0} {1}".format(ctx.message.author.mention, randline))
 
 @bot.event
 async def on_ready():
