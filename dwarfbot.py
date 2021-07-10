@@ -13,9 +13,9 @@ import aiohttp
 # External settings from dot dir
 # Yes Mr Polnäs, you need an external token directory
 HOMEDIR = os.path.expanduser('~')
-TOKENHOME = "%s/.DwarfSettings/" % (HOMEDIR)
+TOKENHOME = "%s/bots/tokens/" % (HOMEDIR)
 
-with open(TOKENHOME + "token.txt", "r") as readfile:
+with open(TOKENHOME + "monke.txt", "r") as readfile:
     TOKEN = readfile.read().strip()
 
 bot = discord.ext.commands.Bot(command_prefix = "!");
