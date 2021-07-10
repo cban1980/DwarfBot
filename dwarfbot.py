@@ -6,7 +6,6 @@ import os
 import requests
 from bs4 import BeautifulSoup as bs
 import re
-import yfinance as yf
 import io
 import aiohttp
 
@@ -23,7 +22,6 @@ bot = discord.ext.commands.Bot(command_prefix = "!");
 
 @bot.event
 async def on_ready():
-   print('Inloggad som: ' + bot.user.name)
    url_data = requests.get('http://www.fortunecookiemessage.com/').text
    soup = bs(url_data, 'html.parser')
    cookie = soup.find(class_="cookie-link").getText()
@@ -40,7 +38,10 @@ async def husman(ctx):
         for li in ul.findAll('li'):
             husmat += li
     values = "\n".join(map(str, husmat))
-    await ctx.channel.send('**Dagens meny hos Husman:**\n' + values)
+    if values.strip():
+        await ctx.channel.send('**Dagens meny hos Husman:**\n' + values)
+    else:
+        await ctx.channel.send('Det är helg och stängt på Husman {0} **ditt miffo!**'.format(ctx.message.author.mention))
 
 
 @bot.command(name='chili', pass_context=True)
@@ -62,12 +63,15 @@ async def chili(ctx):
                 maten += line
     snasket = "".join(map(str, maten))
     snasket = re.sub("\n\s*\n*", "\n", snasket).lstrip()
-    await ctx.channel.send('**Dagens meny hos Chili&Lime:**\n' + snasket)
+    if snasket == 'måndag - fredag':
+        await ctx.channel.send('Det är helg och stängt på Chili&Lime {0} **ditt skåpmongo!**'.format(ctx.message.author.mention))
+    else:
+        await ctx.channel.send('**Dagens meny hos Chili&Lime:**\n' + snasket)
 
 @bot.command(name='väder', pass_context=True)
-async def väder(ctx, arg):
-    arg = arg.capitalize()
-    url = "https://wttr.in/{0}.png?0pq&lang=sv".format(arg)
+async def väder(ctx, *, args):
+    args = args.capitalize()
+    url = "https://wttr.in/{0}.png?0pq&lang=sv".format(args)
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             if resp.status != 200:
@@ -75,7 +79,7 @@ async def väder(ctx, arg):
             data = io.BytesIO(await resp.read())
         await ctx.channel.send(file=discord.File(data, 'väder.png'))
 
-@bot.command(name='hjalp', pass_context=True)
+@bot.command(name='hjälp', pass_context=True)
 async def hjalp(ctx):
     embed = discord.Embed(title="𝐃𝐢𝐬𝐜𝐨𝐫𝐝𝐛𝐨𝐭𝐞𝐧 Monke", description="Kommandolista:", color=0xeee657)
     embed.add_field(name="!husman", value="Visar dagens meny från husman.", inline=False)
