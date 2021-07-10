@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup as bs
 import re
 import io
 import aiohttp
+import random
 
 HOMEDIR = os.path.expanduser('~')
 TOKENHOME = "%s/tokens/" % (HOMEDIR)
@@ -32,6 +33,11 @@ def htmlformat(input):
 def bold(input):
     return "**" + input + "**"
 
+@bot.command(name='pornhub', pass_context=True)
+async def pornhub(ctx):
+    lines = open('{0}/discordbots/files/porn.txt'.format(HOMEDIR)).read().splitlines()
+    randline = random.choice(lines)
+    await ctx.channel.send("{0} {1}".format(ctx.message.author.mention, randline))
 @bot.event
 async def on_ready():
    url_data = requests.get('http://www.fortunecookiemessage.com/').text
@@ -67,7 +73,7 @@ async def warpop():
 
 
 @bot.command(name='streams', pass_context=True)
-async def streams():
+async def streams(ctx):
     htmldata = requests.get('https://www.returnofreckoning.com/')
     soup = bs(htmldata.text, 'html5lib')
     outstuff = []
