@@ -1,3 +1,2 @@
-# DwarfBot
+# A bunch of useless discord bots.
 
-Is where the dwarf p*rn lives!
