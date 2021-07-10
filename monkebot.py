@@ -13,7 +13,7 @@ import aiohttp
 # External settings from dot dir
 # Yes Mr Polnäs, you need an external token directory
 HOMEDIR = os.path.expanduser('~')
-TOKENHOME = "%s/bots/tokens/" % (HOMEDIR)
+TOKENHOME = "%s/tokens/" % (HOMEDIR)
 
 with open(TOKENHOME + "monke.txt", "r") as readfile:
     TOKEN = readfile.read().strip()

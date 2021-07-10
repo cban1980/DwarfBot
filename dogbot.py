@@ -10,7 +10,7 @@ import io
 import aiohttp
 
 HOMEDIR = os.path.expanduser('~')
-TOKENHOME = "%s/bots/tokens/" % (HOMEDIR)
+TOKENHOME = "%s/tokens/" % (HOMEDIR)
 
 with open(TOKENHOME + "dogbot.txt", "r") as readfile:
     TOKEN = readfile.read().strip()
