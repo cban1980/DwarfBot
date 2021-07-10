@@ -9,6 +9,16 @@ import re
 import yfinance as yf
 import io
 import aiohttp
+import pandas as pd
+from yahoo_fin import stock_info
+from plotly.offline import plot, init_notebook_mode
+import time
+import datetime
+init_notebook_mode()
+import cufflinks as cf
+cf.set_config_file(offline=True)
+
+
 # External settings from dot dir
 # Yes Mr Polnäs, you need an external token directory
 HOMEDIR = os.path.expanduser('~')
@@ -40,9 +50,6 @@ async def husman(ctx):
     values = "\n".join(map(str, husmat))
     await ctx.channel.send('**Dagens meny hos Husman:**\n' + values)
 
-@bot.command(name='aktie', pass_context=True)
-async def aktie(ctx, arg):
-    await ctx.channel.send(file=discord.File(result, 'aktie.png'))
 
 @bot.command(name='chili', pass_context=True)
 async def chili(ctx):
@@ -65,9 +72,6 @@ async def chili(ctx):
     snasket = re.sub("\n\s*\n*", "\n", snasket).lstrip()
     await ctx.channel.send('**Dagens meny hos Chili&Lime:**\n' + snasket)
 
-def remove_last_line_from_string(s):
-    return s[:s.rfind('\n')]
-
 @bot.command(name='väder', pass_context=True)
 async def väder(ctx, arg):
     arg = arg.capitalize()
@@ -75,7 +79,7 @@ async def väder(ctx, arg):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             if resp.status != 200:
-                return await channel.send('Kunde ej hämta bild...')
+                return await ctx.channel.send('Kunde ej hämta bild...')
             data = io.BytesIO(await resp.read())
         await ctx.channel.send(file=discord.File(data, 'väder.png'))
 
@@ -84,6 +88,7 @@ async def hjalp(ctx):
     embed = discord.Embed(title="𝐃𝐢𝐬𝐜𝐨𝐫𝐝𝐛𝐨𝐭𝐞𝐧 Monke", description="Kommandolista:", color=0xeee657)
     embed.add_field(name="!husman", value="Visar dagens meny från husman.", inline=False)
     embed.add_field(name="!chili", value="Visar dagens meny från Chili&Lime.", inline=False)
+    embed.add_field(name="!väder <stad>", value="Visar vädret i angiven stad via wttr.in", inline=False)
     embed.set_thumbnail(url="https://media.npr.org/assets/img/2014/08/07/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s800-c85.jpg")
     await ctx.channel.send(embed=embed)
 
