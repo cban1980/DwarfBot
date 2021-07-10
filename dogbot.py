@@ -38,6 +38,7 @@ async def pornhub(ctx):
     lines = open('{0}/discordbots/files/porn.txt'.format(HOMEDIR)).read().splitlines()
     randline = random.choice(lines)
     await ctx.channel.send("{0} {1}".format(ctx.message.author.mention, randline))
+
 @bot.event
 async def on_ready():
    url_data = requests.get('http://www.fortunecookiemessage.com/').text
@@ -45,6 +46,17 @@ async def on_ready():
    cookie = soup.find(class_="cookie-link").getText()
    activity = discord.Game(name=cookie)
    await bot.change_presence(activity=activity)
+
+@bot.command(name='weather', pass_context=True)
+async def väder(ctx, *, args):
+    args = args.capitalize()
+    url = "https://wttr.in/{0}.png?0pq&lang=en".format(args)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            if resp.status != 200:
+                return await ctx.channel.send('Could not fetch image..')
+            data = io.BytesIO(await resp.read())
+        await ctx.channel.send(file=discord.File(data, 'weather.png'))
    
 @bot.command(name='dogbot', pass_context=True)
 async def dogbot(ctx):
