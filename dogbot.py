@@ -33,20 +33,7 @@ def htmlformat(input):
 
 def bold(input):
     return "**" + input + "**"
-
-@bot.event
-async def on_message(message: discord.Message):
-    time_now  = datetime.datetime.now().strftime('%m-%d-%Y-%H-%M-%S') 
-    image_types = ["png", "jpeg", "gif", "jpg", "webp"]
-    for attachment in message.attachments:
-        if any(attachment.filename.lower().endswith(image) for image in image_types):
-            if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author)):
-                await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
-            else:
-                 os.makedirs('{0}/images/{1}'.format(HOMEDIR, message.author))
-                 await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
-
-            
+          
 @bot.command(name='pornhub', pass_context=True)
 async def pornhub(ctx):
     if ctx.message.channel.id != 700643276415565845:
@@ -139,5 +126,18 @@ async def inv(ctx):
     invite = await bot.create_invite(ctx.message.channel, max_uses=1, xkcd=True)
     await ctx.send_message(ctx.message.author, "Invite URL is {}".format(invite.url))
     await ctx.channel.send(ctx.message.author.mention + " Invite URL generated, check your PM's! ")
+
+@bot.listen('on_message')
+async def attachsave(message: discord.Message):
+    time_now  = datetime.datetime.now().strftime('%m-%d-%Y-%H-%M-%S') 
+    image_types = ["png", "jpeg", "gif", "jpg", "webp"]
+    for attachment in message.attachments:
+        if any(attachment.filename.lower().endswith(image) for image in image_types):
+            if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author)):
+                await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
+            else:
+                 os.makedirs('{0}/images/{1}'.format(HOMEDIR, message.author))
+                 await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
+                
 
 bot.run(TOKEN)
