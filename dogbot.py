@@ -11,7 +11,7 @@ import io
 import aiohttp
 import random
 import datetime
-import configparser
+import platform
 ####################################
 # Variables
 ####################################
@@ -50,8 +50,8 @@ def bold(input):
 # Main
 #######################################
 
-@bot.command(name='pornhub', pass_context=True)
-async def pornhub(ctx):
+@bot.command(name='slaanesh', pass_context=True)
+async def slaanesh(ctx):
     if ctx.message.channel.id != 700643276415565845:
         pass
     else:
@@ -81,11 +81,16 @@ async def weather(ctx, *, args):
 @bot.command(name='dogbot', pass_context=True)
 async def dogbot(ctx):
     embed = discord.Embed(title="𝐃𝐨𝐠𝐁𝐨𝐭 𝐜𝐨𝐦𝐦𝐚𝐧𝐝𝐬:", description=" ", color=0xeee657)
+    embed.add_field(name="!weather <location>", value="Posts PNG with the weather in <location>, curtesy of wttr.in.", inline=False)
+    embed.add_field(name="!slaanesh", value="Makes DogBot speak with the voice of Slaanesh, only useable in the #Brothel channel.", inline=False)
     embed.add_field(name="!streams", value="Displays currently running ROR twitch streams.", inline=False)
     embed.add_field(name="!dice", value="Rolls the dices! Syntax: !dice <amount of dices> <number>. Max 5 dices.", inline=False)
     embed.add_field(name="!warpop", value="Displays the current amount of population on the server, and currently players in T1 and T2+ ( excluding anonymous players)", inline=False)
     embed.add_field(name="!serverinvite", value="Generates an invitelink to this Discord server. Will be sent to you in a private message.", inline=False)
-    embed.set_thumbnail(url="https://images-na.ssl-images-amazon.com/images/I/81-yKbVND-L._SY355_.png")
+    embed.add_field(name="!witching start/stop", value="Starts/stops the witching hour, only useable by Shabtys!", inline=False)
+    embed.set_thumbnail(url="https://images-ext-2.discordapp.net/external/L0Au88PJUyWxkjOpPop-QnSSrC--fWuurhMeRLZJs6I/https/i.imgur.com/pA3EPkO.png")
+    embed.set_footer(text='DogBot currently runs on: ({0}-{1} / Python:{2}) and was made by Tanish.'.format(platform.system(), platform.release(), platform.python_version()),icon_url="https://icons-for-free.com/iconfiles/png/512/bxl+tux-1325051940415123278.png")
+
     await ctx.channel.send(embed=embed)
 
 
