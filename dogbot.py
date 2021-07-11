@@ -34,7 +34,7 @@ def htmlformat(input):
 
 def bold(input):
     return "**" + input + "**"
-          
+
 @bot.command(name='pornhub', pass_context=True)
 async def pornhub(ctx):
     if ctx.message.channel.id != 700643276415565845:
@@ -132,6 +132,8 @@ async def inv(ctx):
 async def attachsave(message: discord.Message):
     time_now  = datetime.datetime.now().strftime('%m-%d-%Y-%H-%M-%S') 
     image_types = ["png", "jpeg", "gif", "jpg", "webp"]
+    if message.author.bot: 
+        return
     for attachment in message.attachments:
         if any(attachment.filename.lower().endswith(image) for image in image_types):
             if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author)):

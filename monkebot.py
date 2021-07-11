@@ -88,4 +88,18 @@ async def hjalp(ctx):
     embed.set_thumbnail(url="https://media.npr.org/assets/img/2014/08/07/monkey-selfie_custom-7117031c832fc3607ee5b26b9d5b03d10a1deaca-s800-c85.jpg")
     await ctx.channel.send(embed=embed)
 
+@bot.listen('on_message')
+async def attachsave(message: discord.Message):
+    time_now  = datetime.datetime.now().strftime('%m-%d-%Y-%H-%M-%S') 
+    image_types = ["png", "jpeg", "gif", "jpg", "webp"]
+    if message.author.bot: 
+        return
+    for attachment in message.attachments:
+        if any(attachment.filename.lower().endswith(image) for image in image_types):
+            if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author)):
+                await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
+            else:
+                 os.makedirs('{0}/images/{1}'.format(HOMEDIR, message.author))
+                 await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
+
 bot.run(TOKEN)
