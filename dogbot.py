@@ -150,14 +150,13 @@ async def witching(ctx, arg):
     global status
     global initiator
     global witchstamp
-    if arg ==
     if arg == 'start' and status == False:
         status = True
-        initiator = ctx.message.author.name
+        initiator = ctx.message.author.mention
         witchstamp = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
         file = discord.File("files/Witching_Hour.jpg", filename="Witching_Hour.jpg")
         time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
-        embed = discord.Embed(title="The witching hour has begun!", description="Initiated by **{0}**.".format(ctx.message.author.name), color=0xc27c0e)
+        embed = discord.Embed(title="The witching hour has begun!", description="Initiated by **{0}**.".format(ctx.message.author.mention), color=0xc27c0e)
         embed.add_field(name="Started at: ", value=time_now, inline=False)
         embed.set_image(url="attachment://Witching_Hour.jpg")
         await ctx.channel.send(file=file, embed=embed)
@@ -167,10 +166,12 @@ async def witching(ctx, arg):
         status = False
         file = discord.File("files/Witching_Hour.jpg", filename="Witching_Hour.jpg")
         time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
-        embed = discord.Embed(title="The witching hour has come to an end!", description="By decree of **{0}**.".format(ctx.message.author.name), color=0xc27c0e)
+        embed = discord.Embed(title="The witching hour has come to an end!", description="By decree of **{0}**.".format(ctx.message.author.mention), color=0xc27c0e)
         embed.add_field(name="Stopped at: ", value=time_now, inline=False)
         embed.set_image(url="attachment://Witching_Hour.jpg")
         await ctx.channel.send(file=file, embed=embed)
+        initiator = []
+        witchstamp = ""
     else:
         await ctx.channel.send("{0} There is no Witching hour in progress..".format(ctx.message.author.mention))
 
