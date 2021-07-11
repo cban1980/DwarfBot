@@ -11,6 +11,18 @@ import io
 import aiohttp
 import random
 import datetime
+####################################
+# Variables
+####################################
+
+status = False
+initiator = ""
+witchstamp = ""
+witchers = []
+
+####################################
+# Settings
+####################################
 
 HOMEDIR = os.path.expanduser('~')
 TOKENHOME = "%s/tokens/" % (HOMEDIR)
@@ -35,6 +47,10 @@ def htmlformat(input):
 def bold(input):
     return "**" + input + "**"
 
+#######################################
+# Main
+#######################################
+
 @bot.command(name='pornhub', pass_context=True)
 async def pornhub(ctx):
     if ctx.message.channel.id != 700643276415565845:
@@ -53,7 +69,7 @@ async def on_ready():
    await bot.change_presence(activity=activity)
 
 @bot.command(name='weather', pass_context=True)
-async def väder(ctx, *, args):
+async def weather(ctx, *, args):
     args = args.capitalize()
     url = "https://wttr.in/{0}.png?0pq&lang=en".format(args)
     async with aiohttp.ClientSession() as session:
@@ -127,6 +143,37 @@ async def inv(ctx):
     invite = await bot.create_invite(ctx.message.channel, max_uses=1, xkcd=True)
     await ctx.send_message(ctx.message.author, "Invite URL is {}".format(invite.url))
     await ctx.channel.send(ctx.message.author.mention + " Invite URL generated, check your PM's! ")
+
+@bot.command(name='witching', pass_context=True)
+@commands.has_any_role('Shabty', 'Beastlord')
+async def witching(ctx, arg):
+    global status
+    global initiator
+    global witchstamp
+    if arg ==
+    if arg == 'start' and status == False:
+        status = True
+        initiator = ctx.message.author.name
+        witchstamp = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
+        file = discord.File("files/Witching_Hour.jpg", filename="Witching_Hour.jpg")
+        time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
+        embed = discord.Embed(title="The witching hour has begun!", description="Initiated by **{0}**.".format(ctx.message.author.name), color=0xc27c0e)
+        embed.add_field(name="Started at: ", value=time_now, inline=False)
+        embed.set_image(url="attachment://Witching_Hour.jpg")
+        await ctx.channel.send(file=file, embed=embed)
+    elif arg == 'start' and status == True:
+        await ctx.channel.send("{0} a witching hour is already in progress. Initiated by {1} at {2}".format(ctx.message.author.mention, initiator, witchstamp))
+    elif arg == 'stop' and status == True:
+        status = False
+        file = discord.File("files/Witching_Hour.jpg", filename="Witching_Hour.jpg")
+        time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
+        embed = discord.Embed(title="The witching hour has come to an end!", description="By decree of **{0}**.".format(ctx.message.author.name), color=0xc27c0e)
+        embed.add_field(name="Stopped at: ", value=time_now, inline=False)
+        embed.set_image(url="attachment://Witching_Hour.jpg")
+        await ctx.channel.send(file=file, embed=embed)
+    else:
+        await ctx.channel.send("{0} There is no Witching hour in progress..".format(ctx.message.author.mention))
+
 
 @bot.listen('on_message')
 async def attachsave(message: discord.Message):
