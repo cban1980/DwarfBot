@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# The Discord DogBot.
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
@@ -39,7 +40,7 @@ async def pornhub(ctx):
     if ctx.message.channel.id != 700643276415565845:
         pass
     else:
-        lines = open('{0}/discordbots/files/porn.txt'.format(HOMEDIR)).read().splitlines()
+        lines = open('{0}/files/porn.txt'.format(HOMEDIR)).read().splitlines()
         randline = random.choice(lines)
         await ctx.channel.send("{0} {1}".format(ctx.message.author.mention, randline))
 
