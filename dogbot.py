@@ -11,6 +11,7 @@ import io
 import aiohttp
 import random
 import datetime
+import configparser
 ####################################
 # Variables
 ####################################
@@ -18,7 +19,6 @@ import datetime
 status = False
 initiator = ""
 witchstamp = ""
-witchers = []
 
 ####################################
 # Settings
@@ -26,7 +26,6 @@ witchers = []
 
 HOMEDIR = os.path.expanduser('~')
 TOKENHOME = "%s/tokens/" % (HOMEDIR)
-
 with open(TOKENHOME + "dogbot.txt", "r") as readfile:
     TOKEN = readfile.read().strip()
 
@@ -149,7 +148,6 @@ async def inv(ctx):
 async def witching(ctx, arg):
     global status
     global initiator
-    global witchstamp
     if arg == 'start' and status == False:
         status = True
         initiator = ctx.message.author.mention
@@ -171,7 +169,6 @@ async def witching(ctx, arg):
         embed.set_image(url="attachment://Witching_Hour.jpg")
         await ctx.channel.send(file=file, embed=embed)
         initiator = []
-        witchstamp = ""
     else:
         await ctx.channel.send("{0} There is no Witching hour in progress..".format(ctx.message.author.mention))
 
