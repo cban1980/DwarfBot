@@ -153,22 +153,6 @@ async def dogbot(ctx):
     embed.set_footer(text='DogBot currently runs on: ({0}-{1} / Python:{2}) and was made by Tanish.'.format(platform.system(), platform.release(), platform.python_version()),icon_url="https://icons-for-free.com/iconfiles/png/512/bxl+tux-1325051940415123278.png")
     await ctx.channel.send(embed=embed)
 
-
-# @bot.command(name='warpop', pass_context=True)
-# async def warpop():
-#     htmldata = requests.get('https://www.returnofreckoning.com/whos_online.php').text
-#     soup = bs(htmldata, "html5lib")
-#     pop = soup.find(class_="realm-info realm-info-detail").getText()
-#     pop = pop.replace("Total :", "")
-#     pop = pop.replace("Faction ratio (Order/Destruction) :", "")
-#     pop = pop.replace(":", "")
-#     pop = pop.replace("Martyrs Square (EN)", "")
-#     pop = pop.strip().splitlines()
-#     pop = list(filter(None, pop))
-#     pop = '\n'.join(pop)
-#     await ctx.channel.send(cssformat(str(pop)))
-
-
 @bot.command(name='streams', pass_context=True)
 async def streams(ctx):
     htmldata = requests.get('https://www.returnofreckoning.com/')
@@ -246,10 +230,10 @@ async def attachsave(message: discord.Message):
         return
     for attachment in message.attachments:
         if any(attachment.filename.lower().endswith(image) for image in image_types):
-            if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author)):
+            if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author.name)):
                 await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
             else:
-                 os.makedirs('{0}/images/{1}'.format(HOMEDIR, message.author))
+                 os.makedirs('{0}/images/{1}'.format(HOMEDIR, message.author.name))
                  await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
                 
 
