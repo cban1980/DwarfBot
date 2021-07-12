@@ -13,7 +13,9 @@ import random
 import datetime
 import platform
 from urlextract import URLExtract
-from PIL import Image
+import cv2
+import numpy as np
+from PIL import ImageFont, ImageDraw, Image
 ####################################
 # Variables
 ####################################
@@ -83,6 +85,8 @@ async def weather(ctx, *, args):
 @bot.command(name='warpop', pass_context=True)
 async def warpop(ctx):
     extractor = URLExtract()
+    if os.path.isfile('tier/output.pngt'):
+        os.remove("tier/output.png")
     url_data = requests.get('https://www.returnofreckoning.com/').text
     soup = bs(url_data, 'html5lib')
     soupdivs = soup.findAll("div", {"class": "faction_bar"},)
@@ -102,36 +106,39 @@ async def warpop(ctx):
                     f.write(players.getbuffer())
             async with session.get(urls[0]) as tier1:
                 if tier1.status != 200:
-                    return await ctx.channel.send('Could not tier listing...')
+                    return await ctx.channel.send('Could not get tier listing...')
                 tier1 = io.BytesIO(await tier1.read())
                 with open("tier/tier1.png", "wb") as f:
                     f.write(tier1.getbuffer())
             async with session.get(urls[1]) as tier2:
                 if tier2.status != 200:
-                    return await ctx.channel.send('Could not tier listing...')
+                    return await ctx.channel.send('Could not get tier listing...')
                 tier2 = io.BytesIO(await tier2.read())
                 with open("tier/tier2.png", "wb") as f:
                     f.write(tier2.getbuffer())
             async with session.get(urls[2]) as total:
                 if total.status != 200:
-                    return await ctx.channel.send('Could not tier listing...')
+                    return await ctx.channel.send('Could not get tier listing...')
                 total = io.BytesIO(await total.read())
                 with open("tier/total.png", "wb") as f:
                     f.write(total.getbuffer())
-            im1 = Image.open('tier/players.png')
-            im2 = Image.open('tier/tier1.png')
-            im3 = Image.open('tier/tier2.png')
-            im4 = Image.open('tier/total.png')
-            dst = Image.new('RGB', (im1.width + im1.height, im2.height, im3.height, im4.height ))
-            dst.paste(im1, (0, 0))
-            dst.paste(im2, (0, im1.height))
-            dst.paste(im3, (0, im2.height))
-            dst.paste(im4, (0, im3.height))
-            os.remove("tier/output.png")
-            dst.save('tier/output.png')
-            await ctx.channel.send(file=discord.File('tier/output.png', 'output.png'))
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            bottomLeftCornerOfText = (0,0)
+            fontScale              = 1
+            fontColor              = (255,255,255)
+            lineType               = 2
+            im1 = cv2.imread('tier/players.png', 1)
+            im2 = cv2.imread('tier/tier1.png', 1)
+            im3 = cv2.imread('tier/tier2.png', 1)
+            im4 = cv2.imread('tier/total.png', 1)
+            im_v = cv2.vconcat([im1, im2, im3, im4])
+            cv2.imwrite('tier/output.png', im_v)
+            file = discord.File("tier/output.png", filename="warpop.png")
+            time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
+            embed = discord.Embed(title="Current population on ROR:", description="", color=0xc27c0e)
+            embed.set_image(url="attachment://warpop.png")
+            await ctx.channel.send(file=file, embed=embed)
 
-    dst.paste(im2, (0, im1.height))
 @bot.command(name='dogbot', pass_context=True)
 async def dogbot(ctx):
     embed = discord.Embed(title="𝐃𝐨𝐠𝐁𝐨𝐭 𝐜𝐨𝐦𝐦𝐚𝐧𝐝𝐬:", description=" ", color=0xeee657)
