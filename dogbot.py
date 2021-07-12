@@ -12,6 +12,8 @@ import aiohttp
 import random
 import datetime
 import platform
+from urlextract import URLExtract
+from PIL import Image
 ####################################
 # Variables
 ####################################
@@ -77,7 +79,59 @@ async def weather(ctx, *, args):
                 return await ctx.channel.send('Could not fetch image..')
             data = io.BytesIO(await resp.read())
         await ctx.channel.send(file=discord.File(data, 'weather.png'))
-   
+
+@bot.command(name='warpop', pass_context=True)
+async def warpop(ctx):
+    extractor = URLExtract()
+    url_data = requests.get('https://www.returnofreckoning.com/').text
+    soup = bs(url_data, 'html5lib')
+    soupdivs = soup.findAll("div", {"class": "faction_bar"},)
+    soupdivs2 = soup.findAll("div", {"class": "player_bar"},)
+    stringdivs2 = str(soupdivs2)
+    stringdivs = str(soupdivs)
+    url2 = re.sub('amp;', '', stringdivs2)
+    urls = re.sub('amp;', '', stringdivs)
+    urls = extractor.find_urls(urls)
+    url2 = extractor.find_urls(url2)
+    async with aiohttp.ClientSession() as session:
+            async with session.get(url2[0]) as players:
+                if players.status != 200:
+                    return await ctx.channel.send('Could not tier listing...')
+                players = io.BytesIO(await players.read())
+                with open("tier/players.png", "wb") as f:
+                    f.write(players.getbuffer())
+            async with session.get(urls[0]) as tier1:
+                if tier1.status != 200:
+                    return await ctx.channel.send('Could not tier listing...')
+                tier1 = io.BytesIO(await tier1.read())
+                with open("tier/tier1.png", "wb") as f:
+                    f.write(tier1.getbuffer())
+            async with session.get(urls[1]) as tier2:
+                if tier2.status != 200:
+                    return await ctx.channel.send('Could not tier listing...')
+                tier2 = io.BytesIO(await tier2.read())
+                with open("tier/tier2.png", "wb") as f:
+                    f.write(tier2.getbuffer())
+            async with session.get(urls[2]) as total:
+                if total.status != 200:
+                    return await ctx.channel.send('Could not tier listing...')
+                total = io.BytesIO(await total.read())
+                with open("tier/total.png", "wb") as f:
+                    f.write(total.getbuffer())
+            im1 = Image.open('tier/players.png')
+            im2 = Image.open('tier/tier1.png')
+            im3 = Image.open('tier/tier2.png')
+            im4 = Image.open('tier/total.png')
+            dst = Image.new('RGB', (im1.width + im1.height, im2.height, im3.height, im4.height ))
+            dst.paste(im1, (0, 0))
+            dst.paste(im2, (0, im1.height))
+            dst.paste(im3, (0, im2.height))
+            dst.paste(im4, (0, im3.height))
+            os.remove("tier/output.png")
+            dst.save('tier/output.png')
+            await ctx.channel.send(file=discord.File('tier/output.png', 'output.png'))
+
+    dst.paste(im2, (0, im1.height))
 @bot.command(name='dogbot', pass_context=True)
 async def dogbot(ctx):
     embed = discord.Embed(title="𝐃𝐨𝐠𝐁𝐨𝐭 𝐜𝐨𝐦𝐦𝐚𝐧𝐝𝐬:", description=" ", color=0xeee657)
@@ -90,23 +144,22 @@ async def dogbot(ctx):
     embed.add_field(name="!witching start/stop", value="Starts/stops the witching hour, only useable by Shabtys!", inline=False)
     embed.set_thumbnail(url="https://images-ext-2.discordapp.net/external/L0Au88PJUyWxkjOpPop-QnSSrC--fWuurhMeRLZJs6I/https/i.imgur.com/pA3EPkO.png")
     embed.set_footer(text='DogBot currently runs on: ({0}-{1} / Python:{2}) and was made by Tanish.'.format(platform.system(), platform.release(), platform.python_version()),icon_url="https://icons-for-free.com/iconfiles/png/512/bxl+tux-1325051940415123278.png")
-
     await ctx.channel.send(embed=embed)
 
 
-@bot.command(name='warpop', pass_context=True)
-async def warpop():
-    htmldata = requests.get('https://www.returnofreckoning.com/whos_online.php').text
-    soup = bs(htmldata, "html5lib")
-    pop = soup.find(class_="realm-info realm-info-detail").getText()
-    pop = pop.replace("Total :", "")
-    pop = pop.replace("Faction ratio (Order/Destruction) :", "")
-    pop = pop.replace(":", "")
-    pop = pop.replace("Martyrs Square (EN)", "")
-    pop = pop.strip().splitlines()
-    pop = list(filter(None, pop))
-    pop = '\n'.join(pop)
-    await ctx.channel.send(cssformat(str(pop)))
+# @bot.command(name='warpop', pass_context=True)
+# async def warpop():
+#     htmldata = requests.get('https://www.returnofreckoning.com/whos_online.php').text
+#     soup = bs(htmldata, "html5lib")
+#     pop = soup.find(class_="realm-info realm-info-detail").getText()
+#     pop = pop.replace("Total :", "")
+#     pop = pop.replace("Faction ratio (Order/Destruction) :", "")
+#     pop = pop.replace(":", "")
+#     pop = pop.replace("Martyrs Square (EN)", "")
+#     pop = pop.strip().splitlines()
+#     pop = list(filter(None, pop))
+#     pop = '\n'.join(pop)
+#     await ctx.channel.send(cssformat(str(pop)))
 
 
 @bot.command(name='streams', pass_context=True)
