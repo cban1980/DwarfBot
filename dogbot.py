@@ -93,6 +93,18 @@ async def warpop(ctx):
     soupdivs2 = soup.findAll("div", {"class": "player_bar"},)
     stringdivs2 = str(soupdivs2)
     stringdivs = str(soupdivs)
+    totalpop= soup.findAll("div", {"class": "player-count"},)
+    totalpop = str(totalpop)
+    totalpop = totalpop.splitlines()[2]
+    totalpop = totalpop[28:-4]
+    tierpop = soup.find('div', attrs={'style': 'margin: 5px 0 2px 0;'})
+    tier1pop = str(tierpop)
+    tier2pop = str(tierpop)
+    tier1pop = tier1pop[34:-8]
+    tier2pop = soup.findAll('div', attrs={'style': 'margin: 5px 0 2px 0;'})
+    tier2pop = str(tier2pop)
+    tier2pop = tier2pop[:-9]
+    tier2pop = tier2pop.split('>')[-1]
     url2 = re.sub('amp;', '', stringdivs2)
     urls = re.sub('amp;', '', stringdivs)
     urls = extractor.find_urls(urls)
@@ -123,15 +135,27 @@ async def warpop(ctx):
                 with open("tier/total.png", "wb") as f:
                     f.write(total.getbuffer())
             font = cv2.FONT_HERSHEY_SIMPLEX
-            bottomLeftCornerOfText = (0,0)
-            fontScale              = 1
-            fontColor              = (255,255,255)
-            lineType               = 2
+            blank_image1 = np.zeros((35,207,3), np.uint8)
+            blank_image2 = np.zeros((35,207,3), np.uint8)
+            blank_image3 = np.zeros((35,207,3), np.uint8)
+            blank_image4 = np.zeros((35,207,3), np.uint8)
+            cv2.putText(blank_image1,"Players: {0}".format(totalpop),(30,18), font, 0.5,(0,255,0),2)
+            cv2.putText(blank_image2,'{0}'.format(tier1pop),(30,18), font, 0.5,(0,255,0),2)
+            cv2.putText(blank_image3,'{0}'.format(tier2pop),(30,18), font, 0.5,(0,255,0),2)
+            cv2.putText(blank_image4,'Total',(72,22), font, 0.5,(0,255,0),2)
+            cv2.imwrite('tier/text1.png', blank_image1)
+            cv2.imwrite('tier/text2.png', blank_image2)
+            cv2.imwrite('tier/text3.png', blank_image3)
+            cv2.imwrite('tier/text4.png', blank_image4)
+            b1 = cv2.imread('tier/text1.png', 1)
+            b2 = cv2.imread('tier/text2.png', 1)
+            b3 = cv2.imread('tier/text3.png', 1)
+            b4 = cv2.imread('tier/text4.png', 1)
             im1 = cv2.imread('tier/players.png', 1)
             im2 = cv2.imread('tier/tier1.png', 1)
             im3 = cv2.imread('tier/tier2.png', 1)
             im4 = cv2.imread('tier/total.png', 1)
-            im_v = cv2.vconcat([im1, im2, im3, im4])
+            im_v = cv2.vconcat([b1, im1, b2, im2, b3, im3, b4, im4])
             cv2.imwrite('tier/output.png', im_v)
             file = discord.File("tier/output.png", filename="warpop.png")
             time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
