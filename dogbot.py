@@ -150,7 +150,7 @@ async def warpop(ctx):
             b1 = cv2.imread('tier/text1.png', 1)
             b2 = cv2.imread('tier/text2.png', 1)
             b3 = cv2.imread('tier/text3.png', 1)
-            b4 = cv2.imread('tier/text4.png', 1)
+            b4 = cv2.imread('tier/text4.png', 1)     
             im1 = cv2.imread('tier/players.png', 1)
             im2 = cv2.imread('tier/tier1.png', 1)
             im3 = cv2.imread('tier/tier2.png', 1)
@@ -161,7 +161,7 @@ async def warpop(ctx):
             time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
             embed = discord.Embed(title="Current population on ROR:", description="", color=0xc27c0e)
             embed.set_image(url="attachment://warpop.png")
-            await ctx.channel.send(file=file, embed=embed)
+            await ctx.channel.send(file=file)
 
 @bot.command(name='dogbot', pass_context=True)
 async def dogbot(ctx):
