@@ -15,6 +15,7 @@ import platform
 from urlextract import URLExtract
 import cv2
 import numpy as np
+from PIL import ImageFont, ImageDraw, Image
 ####################################
 # Variables
 ####################################
@@ -22,22 +23,15 @@ import numpy as np
 status = False
 initiator = ""
 witchstamp = ""
+
 ####################################
 # Settings
 ####################################
 
-# Setting up paths for loading tokens and configurations, and creating them if they do not exist.
 HOMEDIR = os.path.expanduser('~')
 TOKENHOME = "%s/tokens/" % (HOMEDIR)
-if os.path.isdir(TOKENHOME) and os.path.isfile(TOKENHOME + "dogbot.txt"):
-    with open(TOKENHOME + "dogbot.txt", "r") as readfile:
-        TOKEN = readfile.read().strip()
-else:
-    print("No token folder exists, creating it along with dogbot.txt, add your dev token to it.")
-    os.mkdir(TOKENHOME)
-    f = open(TOKENHOME + "dogbot.txt","w+")
-    f.close()
-    exit()
+with open(TOKENHOME + "dogbot.txt", "r") as readfile:
+    TOKEN = readfile.read().strip()
 
 bot = discord.ext.commands.Bot(command_prefix = "!");
 
@@ -140,19 +134,15 @@ async def warpop(ctx):
                 total = io.BytesIO(await total.read())
                 with open("tier/total.png", "wb") as f:
                     f.write(total.getbuffer())
-            font = cv2.FONT_HERSHEY_SIMPLEX 
-            blank_image1 = np.zeros((23,207,3), np.uint8)
-            blank_image2 = np.zeros((23,207,3), np.uint8)
-            blank_image3 = np.zeros((23,207,3), np.uint8)
-            blank_image4 = np.zeros((23,207,3), np.uint8)
-            blank_image1.fill(255)
-            blank_image2.fill(255)
-            blank_image3.fill(255)
-            blank_image4.fill(255)
-            cv2.putText(blank_image1,"Players: {0}".format(totalpop),(30,15), font, 0.5,(0,0,0),2)
-            cv2.putText(blank_image2,'{0}'.format(tier1pop),(45,15), font, 0.5,(0,0,0),2)   
-            cv2.putText(blank_image3,'{0}'.format(tier2pop),(45,15), font, 0.5,(0,0,0),2)
-            cv2.putText(blank_image4,'Total',(80,15), font, 0.5,(0,0,0),2)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            blank_image1 = np.zeros((35,207,3), np.uint8)
+            blank_image2 = np.zeros((35,207,3), np.uint8)
+            blank_image3 = np.zeros((35,207,3), np.uint8)
+            blank_image4 = np.zeros((35,207,3), np.uint8)
+            cv2.putText(blank_image1,"Players: {0}".format(totalpop),(30,18), font, 0.5,(0,255,0),2)
+            cv2.putText(blank_image2,'{0}'.format(tier1pop),(30,18), font, 0.5,(0,255,0),2)
+            cv2.putText(blank_image3,'{0}'.format(tier2pop),(30,18), font, 0.5,(0,255,0),2)
+            cv2.putText(blank_image4,'Total',(72,22), font, 0.5,(0,255,0),2)
             cv2.imwrite('tier/text1.png', blank_image1)
             cv2.imwrite('tier/text2.png', blank_image2)
             cv2.imwrite('tier/text3.png', blank_image3)
@@ -171,7 +161,7 @@ async def warpop(ctx):
             time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
             embed = discord.Embed(title="Current population on ROR:", description="", color=0xc27c0e)
             embed.set_image(url="attachment://warpop.png")
-            await ctx.channel.send(file=file, embed=embed)
+            await ctx.channel.send(file=file)
 
 @bot.command(name='dogbot', pass_context=True)
 async def dogbot(ctx):
@@ -217,7 +207,7 @@ async def dice(ctx, *args):
             for i in range(1, int(args[0])+1):
                 number.append(random.randint(min, max))
         total = sum(number)
-        await ctx.channel.send("The dices tumbles and rolls for " + ctx.message.author.mention + " and they gives the numbers: " + cssformat(str(number)) + cssformat(" Total: " + str(total)))
+        await ctx.channel.send("The dices tumbles and rolls for " + ctx.message.author.mention + " and they gives the numbers: " + iniformat(str(number)) + cssformat(" Total: " + str(total)))
 
 
 @bot.command(name='serverinvite', pass_context=True)
@@ -234,7 +224,7 @@ async def witching(ctx, arg):
     if arg == 'start' and status == False:
         status = True
         initiator = ctx.message.author.mention
-      
+        witchstamp = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
         file = discord.File("files/Witching_Hour.jpg", filename="Witching_Hour.jpg")
         time_now = datetime.datetime.now().strftime('%m-%d-%Y-%H:%M:%S')
         embed = discord.Embed(title="The witching hour has begun!", description="Initiated by **{0}**.".format(ctx.message.author.mention), color=0xc27c0e)
@@ -265,10 +255,10 @@ async def attachsave(message: discord.Message):
     for attachment in message.attachments:
         if any(attachment.filename.lower().endswith(image) for image in image_types):
             if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author.name)):
-                await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
+                await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author.name, time_now) + attachment.filename)
             else:
                  os.makedirs('{0}/images/{1}'.format(HOMEDIR, message.author.name))
-                 await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author, time_now) + attachment.filename)
+                 await attachment.save('{0}/images/{1}/{2}'.format(HOMEDIR, message.author.name, time_now) + attachment.filename)
                 
 
 bot.run(TOKEN)
