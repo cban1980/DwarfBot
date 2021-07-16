@@ -255,10 +255,10 @@ async def attachsave(message: discord.Message):
     for attachment in message.attachments:
         if any(attachment.filename.lower().endswith(image) for image in image_types):
             if os.path.isdir('{0}/images/{1}'.format(HOMEDIR, message.author.name)):
-                await attachment.save('{0}/images/{1}/{2}{3}'.format(HOMEDIR, message.author.name, time_now) + attachment.filename)
+                await attachment.save('{0}/images/{1}/{2}{3}'.format(HOMEDIR, message.author.name, time_now + attachment.filename)
             else:
                  os.makedirs('{0}/images/{1}'.format(HOMEDIR, message.author.name))
-                 await attachment.save('{0}/images/{1}/{2}{3}'.format(HOMEDIR, message.author.name, time_now) + attachment.filename)
+                 await attachment.save('{0}/images/{1}/{2}{3}'.format(HOMEDIR, message.author.name, time_now + attachment.filename)
                 
 
 bot.run(TOKEN)
