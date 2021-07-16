@@ -82,10 +82,12 @@ async def weather(ctx, *, args):
             data = io.BytesIO(await resp.read())
         await ctx.channel.send(file=discord.File(data, 'weather.png'))
 
+
+
 @bot.command(name='warpop', pass_context=True)
 async def warpop(ctx):
     extractor = URLExtract()
-    if os.path.isfile('tier/output.pngt'):
+    if os.path.isfile('tier/output.png'):
         os.remove("tier/output.png")
     url_data = requests.get('https://www.returnofreckoning.com/').text
     soup = bs(url_data, 'html5lib')
@@ -139,7 +141,7 @@ async def warpop(ctx):
             blank_image2 = np.full((H, W, 4), (0, 0, 0, 0), np.uint8)
             blank_image3= np.full((H, W, 4), (0, 0, 0, 0), np.uint8)
             blank_image4 = np.full((H, W, 4), (0, 0, 0, 0), np.uint8)
-            RGBA_BLACK = (192,192,192,192) 
+            RGBA_BLACK = (192,192,192192) 
             cv2.putText(blank_image1,"Players: {0}".format(totalpop),(30,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_BLACK, 2)
             cv2.putText(blank_image2,'{0}'.format(tier1pop),(40,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_BLACK, 2)
             cv2.putText(blank_image3,'{0}'.format(tier2pop),(40,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_BLACK, 2)
