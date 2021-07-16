@@ -134,17 +134,16 @@ async def warpop(ctx):
                 total = io.BytesIO(await total.read())
                 with open("tier/total.png", "wb") as f:
                     f.write(total.getbuffer())
-            font = cv2.FONT_HERSHEY_SIMPLEX
             (H , W) = 35, 207
             blank_image1 = np.full((H, W, 4), (0, 0, 0, 0), np.uint8)
             blank_image2 = np.full((H, W, 4), (0, 0, 0, 0), np.uint8)
             blank_image3= np.full((H, W, 4), (0, 0, 0, 0), np.uint8)
             blank_image4 = np.full((H, W, 4), (0, 0, 0, 0), np.uint8)
-            RGBA_GREEN = (0, 255, 0, 255) 
-            cv2.putText(blank_image1,"Players: {0}".format(totalpop),(30,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_GREEN, 2)
-            cv2.putText(blank_image2,'{0}'.format(tier1pop),(40,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_GREEN, 2)
-            cv2.putText(blank_image3,'{0}'.format(tier2pop),(40,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_GREEN, 2)
-            cv2.putText(blank_image4,'Total',(72,22), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_GREEN, 2)
+            RGBA_BLACK = (192,192,192,192) 
+            cv2.putText(blank_image1,"Players: {0}".format(totalpop),(30,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_BLACK, 2)
+            cv2.putText(blank_image2,'{0}'.format(tier1pop),(40,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_BLACK, 2)
+            cv2.putText(blank_image3,'{0}'.format(tier2pop),(40,18), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_BLACK, 2)
+            cv2.putText(blank_image4,'Total',(72,22), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RGBA_BLACK, 2)
             cv2.imwrite('tier/text1.png', blank_image1)
             cv2.imwrite('tier/text2.png', blank_image2)
             cv2.imwrite('tier/text3.png', blank_image3)
