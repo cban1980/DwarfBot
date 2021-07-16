@@ -201,6 +201,12 @@ async def streams(ctx):
     embed.add_field(name="Currently running ROR Streams:", value=str(outstuff), inline=False)
     await ctx.channel.send(embed=embed) 
 
+@bot.command(name='randimg', pass_context=True)
+async def randimg(ctx, arg):
+    path="{0}/images/{1}/".format(HOMEDIR, arg)
+    files=os.listdir(path)
+    file=random.choice(files)
+    await ctx.channel.send(file=file)
 
 @bot.command(name='dice', pass_context=True)
 async def dice(ctx, *args):
