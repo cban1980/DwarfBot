@@ -15,7 +15,6 @@ import platform
 from urlextract import URLExtract
 import cv2
 import numpy as np
-from PIL import ImageFont, ImageDraw, Image
 ####################################
 # Variables
 ####################################
